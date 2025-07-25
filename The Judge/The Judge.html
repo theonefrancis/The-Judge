@@ -395,18 +395,19 @@ You have the right to remain silent. Anything you say can or will be used agains
 &lt;strong&gt;The Judge&lt;/strong&gt;: &quot;Thank you. You may proceed with the report.&quot;
 
 [[Continue|NextPhase]]</tw-passagedata><tw-passagedata pid="8" name="NextPhase" tags="" position="500,0" size="100,100">&lt;center&gt;&lt;h1&gt;THE REPORT&lt;/h1&gt;&lt;/center&gt;
-&lt;center&gt;&lt;img src=&quot;media/prosecutor.png&quot; width=&quot;80%&quot;&gt;&lt;/center&gt;
+&lt;&lt;if $sex is &quot;male&quot;&gt;&gt;
+	&lt;center&gt;&lt;img src=&quot;media/prosecutor_male.png&quot; width=&quot;80%&quot;&gt;&lt;/center&gt;
+&lt;&lt;elseif $sex is &quot;female&quot;&gt;&gt;
+ 	&lt;center&gt;&lt;img src=&quot;media/prosecutor_female.png&quot; width=&quot;80%&quot;&gt;&lt;/center&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;&lt;silently&gt;&gt;
-    &lt;&lt;set $month = [ &quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;, &quot;August&quot;, &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;]&gt;&gt;
+    &lt;&lt;set $month = either(&quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;, &quot;August&quot;, &quot;September&quot;, &quot;October&quot;, &quot;November&quot;, &quot;December&quot;)&gt;&gt;
     &lt;&lt;set $date = random(1, 28)&gt;&gt;
     &lt;&lt;set $year = random(2020, 2025)&gt;&gt;
     &lt;&lt;set $timeh = random(0, 12)&gt;&gt;
     &lt;&lt;set $timem = random(10, 59)&gt;&gt;
-    &lt;&lt;set $ampm = [ &quot;AM&quot;, &quot;PM&quot;]&gt;&gt;
-    &lt;&lt;set $AMPM = either(...$ampm)&gt;&gt;
-    &lt;&lt;set $MONTH = either(...$month)&gt;&gt;
-
-    &lt;&lt;set $streetname = [
+    &lt;&lt;set $ampm =  either(&quot;AM&quot;, &quot;PM&quot;)&gt;&gt;
+    &lt;&lt;set $streetname = either(
         &quot;Main Street&quot;, &quot;Broadway&quot;, &quot;Elm Street&quot;, &quot;Maple Avenue&quot;, &quot;Oak Street&quot;, &quot;Cedar Lane&quot;, &quot;Pine Street&quot;, &quot;Walnut Avenue&quot;,
         &quot;Chestnut Street&quot;, &quot;Willow Drive&quot;, &quot;Washington Avenue&quot;, &quot;Jefferson Street&quot;, &quot;Lincoln Boulevard&quot;, &quot;Madison Avenue&quot;,
         &quot;Jackson Street&quot;, &quot;Monroe Street&quot;, &quot;Adams Avenue&quot;, &quot;Franklin Street&quot;, &quot;Grant Avenue&quot;, &quot;Hamilton Road&quot;,
@@ -439,39 +440,91 @@ You have the right to remain silent. Anything you say can or will be used agains
         &quot;Violet Street&quot;, &quot;Lavender Avenue&quot;, &quot;Mint Drive&quot;, &quot;Basil Street&quot;, &quot;Sage Lane&quot;, &quot;Thyme Road&quot;,
         &quot;Oakwood Drive&quot;, &quot;Birchwood Lane&quot;, &quot;Maplewood Street&quot;, &quot;Cedarwood Avenue&quot;, &quot;Redwood Drive&quot;, &quot;Pinehill Street&quot;,
         &quot;Sprucehill Drive&quot;, &quot;Ashwood Avenue&quot;, &quot;Poplarhill Street&quot;, &quot;Beechwood Lane&quot;
-    ]&gt;&gt;
+    )&gt;&gt;
+    &lt;&lt;set $where = either( &quot;their apartment&quot;, &quot;a store&quot;, &quot;a gas station&quot;, &quot;their workplace&quot;, &quot;a supermarket&quot;, &quot;State&#39;s Border before they could flee&quot;)&gt;&gt;
      &lt;&lt;set $civic = random(1, 2000)&gt;&gt;
-    &lt;&lt;set $road = either(...$streetname)&gt;&gt;
-
-    &lt;&lt;set $scenearrival = [
-        &quot;not on scene, but was later identified by the complainant&quot;,
-        &quot;on scene and was identified by the complainant&quot;,
-        &quot;not on scene but was later apprehended while fleeing&quot;,
-        &quot;on scene and spontaneously turned himself in&quot;
-    ]&gt;&gt;
-    &lt;&lt;set $resistornot = [
-        &quot;did not resist arrest and didn&#39;t get any additional charges&quot;,
-        &quot;passively resisted arrest and was charged for obstruction&quot;,
-        &quot;actively resisted arrest&quot;
-    ]&gt;&gt;
-    &lt;&lt;set $frisk = [
+    
+    &lt;&lt;set $scenearrival = either(
+        &quot;not on scene, but they were identified by the complainant and later intercepted by &quot; + $where + &quot;.&quot;,
+        &quot;on scene and was identified by the complainant.&quot;,
+        &quot;not on scene but was later apprehended while fleeing.&quot;,
+        &quot;on scene.&quot;
+    )&gt;&gt;
+    &lt;&lt;set $frisk = either(
         &quot;drugs&quot;, &quot;drug paraphernalia&quot;, &quot;a gun with an unreadable s/n&quot;, &quot;a gun registered to them&quot;,
         &quot;a gun registered to another owner&quot;, &quot;a knife&quot;, &quot;several bladed objects&quot;, &quot;nothing illegal&quot;,
         &quot;pictures of children not related to the owner&quot;, &quot;nothing illegal&quot;, &quot;several lockpicking-related tools&quot;,
-        &quot;a screwdriver with dent marks on the head&quot;, &quot;a bloody tissue, tested positive for the owner&#39;s DNA&quot;
-    ]&gt;&gt;
-    &lt;&lt;set $scene = either(...$scenearrival)&gt;&gt;
+        &quot;a screwdriver with dent marks on the head&quot;, &quot;a bloody tissue, tested positive for the owner&#39;s DNA&quot;, &quot;nothing illegal&quot;
+    )&gt;&gt;
 
-    &lt;&lt;if $resist is undefined&gt;&gt;
-        &lt;&lt;set $resist = either(...$resistornot)&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
-    &lt;&lt;if $friskobjects is undefined&gt;&gt;
-        &lt;&lt;set $friskobjects = either(...$frisk)&gt;&gt;
-    &lt;&lt;/if&gt;&gt;
+/* Genera variabili casuali: &quot;yes&quot; o &quot;no&quot; */
+&lt;&lt;set $wasInVehicle = either(&quot;yes&quot;, &quot;no&quot;)&gt;&gt;
+&lt;&lt;set $didFlee = either(&quot;yes&quot;, &quot;no&quot;)&gt;&gt;
+&lt;&lt;set $compliedWithLEO = either(&quot;yes&quot;, &quot;no&quot;)&gt;&gt;
+&lt;&lt;set $wasArmed = either(&quot;yes&quot;, &quot;no&quot;)&gt;&gt;
+&lt;&lt;set $wasUnderInfluence = either(&quot;yes&quot;, &quot;no&quot;)&gt;&gt;
+&lt;&lt;set $resistArrest = either(&quot;yes&quot;, &quot;no&quot;)&gt;&gt;
+&lt;&lt;set $bodily = either(&quot;causing&quot;, &quot;without&quot;)&gt;&gt;
+&lt;&lt;set $eyewitness = either(&quot;yes&quot;, &quot;no&quot;)&gt;&gt;
+
+/* Variabili per test di sobrietà */
+&lt;&lt;set $hgn = random(5, 10)&gt;&gt;
+&lt;&lt;set $wnt = random(5, 10)&gt;&gt;
+&lt;&lt;set $ols = random(5, 10)&gt;&gt;
+
+/* Variabile per comporre il rapporto */
+&lt;&lt;set $report = &quot;On &#39;&#39;$month $date, $year&#39;&#39; at &#39;&#39;$timeh:$timem $ampm&#39;&#39;, Police officers were dispatched at &#39;&#39;$civic $streetname&#39;&#39; after receiving a call from the complainant for a possible case of &#39;&#39;$casetype&#39;&#39;. Upon arrival, they found the defendant was &#39;&#39;$scenearrival&#39;&#39; &quot;&gt;&gt;
+
+---
+
+:: Prosecutor Report
+&lt;&lt;if $wasInVehicle == &quot;yes&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;&lt;strong&gt;The defendant was in a vehicle&lt;/strong&gt; at the time and a traffic stop was performed. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $wasInVehicle == &quot;no&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;&lt;strong&gt;The defendant was on foot&lt;/strong&gt;. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;&lt;if $wasUnderInfluence == &quot;yes&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;The defendant &lt;strong&gt;appeared to be under the influence&lt;/strong&gt; of substances. A field sobriety test was performed and &lt;strong&gt;returned &quot; + $hgn + &quot;/10 HGN, &quot; + $wnt + &quot;/10 WNT and &quot; + $ols + &quot;/10 OLS&lt;/strong&gt;. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $wasUnderInfluence == &quot;no&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;The defendant &lt;strong&gt;did not appear to be under the influence&lt;/strong&gt; of substances. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;&lt;if $didFlee == &quot;yes&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;During the stop, &lt;strong&gt;defendant attempted to flee&lt;/strong&gt; from law enforcement, but was apprehended soon after. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $didFlee == &quot;no&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;The defendant &lt;strong&gt;remained on scene&lt;/strong&gt; and further checks were performed. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;&lt;if $wasArmed == &quot;yes&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;The defendant &lt;strong&gt;was found to be in possession of $frisk&lt;/strong&gt;. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $wasArmed == &quot;no&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;The defendant &lt;strong&gt;was found to be in possession of $frisk&lt;/strong&gt;. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;&lt;if $resistArrest == &quot;yes&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;The defendant &lt;strong&gt;actively resisted arrest &quot; + $bodily + &quot; injury to LEOs&lt;/strong&gt;. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $resistArrest == &quot;no&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;The defendant eventually &lt;strong&gt;complied with arrest&lt;/strong&gt; and was transported to the local police station. &quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+
+&lt;&lt;if $eyewitness == &quot;yes&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;&lt;strong&gt;The defendant was identified as the perpetrator&lt;/strong&gt; by one or more witnesses.&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $eyewitness == &quot;no&quot;&gt;&gt;
+&lt;&lt;set $report += &quot;Officers interviewed people present on scene, but &lt;strong&gt;no one was able to indicate the defendant as the perpetrator&lt;/strong&gt;.&quot;&gt;&gt;
+&lt;&lt;/if&gt;&gt;
 &lt;&lt;/silently&gt;&gt;
-&lt;strong&gt;Prosecutor&lt;/strong&gt;: &quot;On $MONTH $date, $year at $timeh:$timem $AMPM, officers were dispatched at &#39;&#39;$civic $road&#39;&#39;. Upon arrival of LEOs., the Defendant was $scene. The complainant stated that the Defendant had committed the crime of &#39;&#39;$casetype&#39;&#39;. Based on this accusation, the Defendant was subsequently detained and transported to the local county jail, therefore charged and scheduled for a probable cause hearing. The defendant &#39;&#39;$resist&#39;&#39;. The defendant was found in possession of $friskobjects.&quot;
+&#39;&#39;Prosecutor’s Report:&#39;&#39;
 
-* [[Review Evidence]]
+&lt;&lt;print $report&gt;&gt;
+
+[[Review Evidence]]
 </tw-passagedata><tw-passagedata pid="9" name="Review Evidence" tags="" position="500,200" size="100,100">&lt;center&gt;&lt;h1&gt;EVIDENCE&lt;/h1&gt;&lt;/center&gt;
 &lt;&lt;silently&gt;&gt;
 	&lt;&lt;set $evidence = [
